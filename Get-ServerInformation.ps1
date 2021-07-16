@@ -1,3 +1,4 @@
 Get-ChildItem .\*.ps1 | ForEach-Object {. $_ }
 
-Get-OUfqdn -Department accounts
+$Accounts = Get-OUfqdn -Department accounts
+$servers = Get-ADComputer -SearchBase $serversOuPath -Filter *
