@@ -9,12 +9,24 @@ function Get-OUfqdn {
         [ValidateNotNullOrEmpty()]
         [OutputType([string])]
         [string]
-        $Department
+        $Department,
+
+        [Parameter(Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'ParameterSet1')]
+        [ValidateNotNull()]
+        [ValidateNotNullOrEmpty()]
+        [OutputType([string])]
+        [ValidateSet ('Users','Workstations','Servers','Service Accounts','SecurityGroups','Domain Controllers')]
+        [string]
+        $Type
+
     )
 
     $baseOU = (Get-ADDomain).DistinguishedName
     $OUs = Get-ADOrganizationalUnit -Filter * -SearchScope SubTree -SearchBase $baseOU | Sort-Object -Property DistinguishedName
-    $UserOU = $OUs | Where-Object { ( $_.DistinguishedName -Like "*$Department*" ) -and ( $_.DistinguishedName -Like '*users*' ) } | Select-Object -Property DistinguishedName
+    $UserOU = $OUs | Where-Object { ( $_.DistinguishedName -Like "*$Department*" ) -and ( $_.DistinguishedName -Like $Type ) } | Select-Object -Property DistinguishedName
     $UserOU.DistinguishedName
 
 }
