@@ -1,4 +1,10 @@
-Get-ChildItem .\*.ps1 | ForEach-Object {. $_ }
+Get-ChildItem .\*.ps1 | ForEach-Object { . $_ }
 
-$Accounts = Get-OUfqdn -Department accounts
-$servers = Get-ADComputer -SearchBase $serversOuPath -Filter *
+
+$serversOuPath = Get-OUDistinguishedName -SearchTerm Server
+$servers = Get-ADComputer -SearchBase $serversOuPath -Filter *  | Select-Object -ExpandProperty Name
+
+
+foreach ($server in $servers) {
+    Write-Output $server
+}
